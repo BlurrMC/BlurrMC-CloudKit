@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 import Nuke
 
 class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {

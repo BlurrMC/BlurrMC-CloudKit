@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Blurred-ios.xcodeproj">
+      location = "group:/Users/martinvelev/Documents/BlurrMC-iOS/Blurred-CloudKit.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

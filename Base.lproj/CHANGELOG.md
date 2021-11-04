@@ -1,4 +1,16 @@
 # Changelog
+## 4.0 (Build 1)
+* Removed OTP & EULA & notification settings & notifications view controllers
+* Removed token key
+* Migrated code from Alamofire to Cloudkit in Signup and 
+### TODO:
+* Migrate channel
+* Migrate home
+* Migrate search
+* Migrate account settings
+* Migrate comments
+* Migrate follower + following
+* Migrate channel videos
 ## 3.0
 * Added code to make "BlurrMC servers are currently offline" appear (under additionalsettings storyboard)
 * BlurrMC is now open source!

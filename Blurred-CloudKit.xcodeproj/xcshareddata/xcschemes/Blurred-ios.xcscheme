@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1DF6F65244F550300E11BF9"
                BuildableName = "Blurred.app"
-               BlueprintName = "Blurred-ios"
-               ReferencedContainer = "container:Blurred-ios.xcodeproj">
+               BlueprintName = "Blurred-CloudKit"
+               ReferencedContainer = "container:Blurred-CloudKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1DF6F80244F550600E11BF9"
-               BuildableName = "Blurred-iosTests.xctest"
-               BlueprintName = "Blurred-iosTests"
-               ReferencedContainer = "container:Blurred-ios.xcodeproj">
+               BuildableName = "Blurred-CloudKitTests.xctest"
+               BlueprintName = "Blurred-CloudKitTests"
+               ReferencedContainer = "container:Blurred-CloudKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1DF6F8B244F550700E11BF9"
-               BuildableName = "Blurred-iosUITests.xctest"
-               BlueprintName = "Blurred-iosUITests"
-               ReferencedContainer = "container:Blurred-ios.xcodeproj">
+               BuildableName = "Blurred-CloudKitUITests.xctest"
+               BlueprintName = "Blurred-CloudKitUITests"
+               ReferencedContainer = "container:Blurred-CloudKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -66,8 +66,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1DF6F65244F550300E11BF9"
             BuildableName = "Blurred.app"
-            BlueprintName = "Blurred-ios"
-            ReferencedContainer = "container:Blurred-ios.xcodeproj">
+            BlueprintName = "Blurred-CloudKit"
+            ReferencedContainer = "container:Blurred-CloudKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -83,8 +83,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1DF6F65244F550300E11BF9"
             BuildableName = "Blurred.app"
-            BlueprintName = "Blurred-ios"
-            ReferencedContainer = "container:Blurred-ios.xcodeproj">
+            BlueprintName = "Blurred-CloudKit"
+            ReferencedContainer = "container:Blurred-CloudKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

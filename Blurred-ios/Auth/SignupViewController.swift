@@ -8,6 +8,7 @@
 
 import UIKit
 import TTGSnackbar
+import CloudKit
 
 class SignupViewController: UIViewController, UITextFieldDelegate {
     
@@ -27,23 +28,9 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    // MARK: TOS Button Tapped
-    @IBAction func TOSButtonTap(_ sender: Any) {
-        guard let termsOfServiceUrl = URL(string: "https://blurrmc.com/terms_of_service/") else { return }
-        UIApplication.shared.open(termsOfServiceUrl)
-    }
-    
-    
-    // MARK: Privacy Policy Tapped
-    @IBAction func privacyPolicyTap(_ sender: Any) {
-        guard let privacyPolicyUrl = URL(string: "https://blurrmc.com/privacy_policy/") else { return }
-        UIApplication.shared.open(privacyPolicyUrl)
-    }
-    
-    
     // MARK: Send the new user's information
     func sendSignupCreds() {
-        // Setup the api over here.
+        // Quick Validatons
         if (nameTextField.text?.isEmpty)! ||
             (usernameTextField.text?.isEmpty)! ||
             (emailTextField.text?.isEmpty)! ||
@@ -60,6 +47,8 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             popupMessages().showMessage(title: "Alert", message: "Your password must be at least six characters long.", alertActionTitle: "OK", viewController: self)
             return
         }
+        
+        // Loading Animation
         let myActivityIndicator = DifferencesActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         myActivityIndicator.center = view.center
         myActivityIndicator.hidesWhenStopped = true
@@ -67,76 +56,67 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.view.addSubview(myActivityIndicator)
         }
-        let myUrl = URL(string: "https://blurrmc.com/api/v1/registrations")
-        var request = URLRequest(url:myUrl!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "content-type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        let postString = ["user":["name": nameTextField.text!, "username": usernameTextField.text!, "email": emailTextField.text!, "password": passwordTextField.text!, "confirmation-password": confirmPasswordTextField.text!]] as [String:[String: String]] // Missing params missing whatever i hate you go die
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: postString, options: .prettyPrinted)
-        } catch let error {
-            let snackbar = TTGSnackbar(message: "Error contacting server, try again later.", duration: .middle)
-            DispatchQueue.main.async {
-                snackbar.show()
-                self.SignUpButton.isEnabled = true
-            }
-            print(error.localizedDescription)
-        }
-        let task = URLSession.shared.dataTask(with: request) { (Data, URLResponse, Error) in
-            self.removeActivityIndicator(activityIndicator: myActivityIndicator)
-            if Error != nil {
-                let snackbar = TTGSnackbar(message: "Error contacting server, try again later.", duration: .middle)
-                DispatchQueue.main.async {
-                    snackbar.show()
-                    self.SignUpButton.isEnabled = true
+        
+        // Set record
+        let record = CKRecord(recordType: "Users")
+        record.setValuesForKeys([
+            "name": self.nameTextField.text!,
+            "email": self.emailTextField.text!,
+            "password": self.passwordTextField.text!,
+            "username": self.usernameTextField.text!
+        ])
+        
+        // Validate data and upload it
+        let container = CKContainer.default()
+        let database = container.publicCloudDatabase
+        let query = CKQuery(recordType: "Users", predicate: NSPredicate(format: "TRUEPREDICATE", argumentArray: nil))
+        database.perform(query, inZoneWith: CKRecordZone.default().zoneID) { [weak self] records, error in
+            guard let self = self else { return }
+            
+            if error == nil {
+                var userCanSignup: Bool = true
+                
+                for record in records! {
+                    if record.object(forKey: "username") as? String == self.usernameTextField.text {
+                        userCanSignup = false
+                    }
                 }
-                print("error=\(String(describing: Error))")
-                return
-            }
-            do {
-                guard let data = Data else { return }
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? NSDictionary
-                if let parseJSON = json {
-                    let userId = parseJSON["userId"] as? String
-                    if let status = parseJSON["status"] as? String{
-                        if status == "User already exists" {
-                            popupMessages().showMessage(title: "Error", message: "User already exsists", alertActionTitle: "OK", viewController: self)
-                            DispatchQueue.main.async {
-                                self.SignUpButton.isEnabled = true
-                            }
-                            return
-                        }
-                    }
-                    if userId == nil {
-                        popupMessages().showMessage(title: "Error", message: "Error contacting the server. Try again later.", alertActionTitle: "OK", viewController: self)
-                        DispatchQueue.main.async {
-                            self.SignUpButton.isEnabled = true
-                        }
-                        return
-                    } else {
-                        popupMessages().showMessage(title: "Success", message: "You have succesfully signed up.", alertActionTitle: "OK", viewController: self)
-                        DispatchQueue.main.async {
-                            self.dismiss(animated: true, completion: nil) 
-                        }
-                    }
-                } else {
-                    let snackbar = TTGSnackbar(message: "Error contacting server, try again later.", duration: .middle)
+                
+                if userCanSignup != true {
+                    // User can't signup
+                    popupMessages().showMessage(title: "Error", message: "Cannot signup. Username is already taken. Come on man!", alertActionTitle: "OK", viewController: self)
                     DispatchQueue.main.async {
-                        snackbar.show()
                         self.SignUpButton.isEnabled = true
                     }
+                    print("error code: asdfuhasdufha0sdfh")
+                    self.removeActivityIndicator(activityIndicator: myActivityIndicator)
+                } else {
+                    // User can signup
+                    database.save(record, completionHandler: { _, error in
+                        self.removeActivityIndicator(activityIndicator: myActivityIndicator)
+                        
+                        // Signup error check
+                        if let error = error {
+                            let snackbar = TTGSnackbar(message: "Error signing up. Keep trying!", duration: .middle)
+                            DispatchQueue.main.async {
+                                snackbar.show()
+                                self.SignUpButton.isEnabled = true
+                            }
+                            print("error code: adsuaifaudfh82, error: \(error)")
+                            return
+                        }
+                        
+                        // Signup Succeeded
+                        popupMessages().showMessage(title: "Success", message: "You have succesfully signed up.", alertActionTitle: "OK", viewController: self)
+                        DispatchQueue.main.async {
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    })
                 }
-            } catch {
-                let snackbar = TTGSnackbar(message: "Error contacting server, try again later.", duration: .middle)
-                DispatchQueue.main.async {
-                    snackbar.show()
-                    self.SignUpButton.isEnabled = true
-                }
-                print(error)
+                
             }
+            
         }
-        task.resume()
     }
     
     

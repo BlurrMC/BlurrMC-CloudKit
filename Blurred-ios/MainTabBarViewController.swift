@@ -21,19 +21,10 @@ class MainTabBarViewController: UITabBarController {
             let preImage = image.resize(targetSize: CGSize(width: 30, height: 30))
             let postImage = preImage.af.imageRounded(withCornerRadius: 15)
             
-            self.viewControllers?[4].tabBarItem.image = postImage.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+            self.viewControllers?[3].tabBarItem.image = postImage.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
         }
         // self.viewControllers?[3].tabBarItem.badgeValue = "3"
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        NotificationCenter.default.addObserver(self, selector: #selector(tapFromNotification(_:)), name: .notificationtap, object: "notificationtap")
-    }
-    
-    @objc func tapFromNotification(_ notification: Notification) {
-        self.selectedIndex = 3
     }
     
     // MARK: Load avatar for tab bar

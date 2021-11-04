@@ -99,17 +99,4 @@ class AdditionalSettingsViewController: UIViewController {
         guard let termsOfServiceUrl = URL(string: "https://blurrmc.com/terms_of_service/") else { return }
         UIApplication.shared.open(termsOfServiceUrl)
     }
-    
-    // MARK: Pass data through segue
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.destination {
-        case is EULAViewController:
-            let vc = segue.destination as? EULAViewController
-            if segue.identifier == "showEulaAgain" {
-                vc?.alreadySeen = true
-            }
-        default:
-            break
-        }
-    }
 }

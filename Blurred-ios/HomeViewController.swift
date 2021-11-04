@@ -335,7 +335,6 @@ class HomeViewController: UIViewController, UIAdaptivePresentationControllerDele
         self.applyStyle()
         self.tableNode.leadingScreensForBatching = 1.0
         homeFeedRequest()
-        checkUser() // This doesn't have to be the first thing
         // Upload video notification complete
         NotificationCenter.default.addObserver(self, selector: #selector(videoUploadedNotification(_:)), name: .didUploadVideo, object: nil)
     }
@@ -411,93 +410,6 @@ class HomeViewController: UIViewController, UIAdaptivePresentationControllerDele
                 }
             }
         }
-    }
-    
-    
-    // MARK: Check user's account to make sure it's valid
-    func checkUser() {
-        guard let accessToken: String = try? tokenValet.string(forKey: "Token") else {
-            try? self.myValet.removeObject(forKey: "Id")
-            try? self.tokenValet.removeObject(forKey: "Token")
-            try? self.tokenValet.removeObject(forKey: "NotificationToken")
-            try? self.myValet.removeAllObjects()
-            try? self.tokenValet.removeAllObjects()
-            DispatchQueue.main.async {
-                let loginPage = self.storyboard?.instantiateViewController(identifier: "AuthenticateViewController") as! AuthenticateViewController
-                self.present(loginPage, animated:false, completion:nil)
-                self.window =  UIWindow(frame: UIScreen.main.bounds)
-                self.window?.rootViewController = loginPage
-                self.window?.makeKeyAndVisible()
-            }
-            return
-        }
-        guard let userId: String = try? myValet.string(forKey: "Id") else { return }
-        guard let myUrl = URL(string: "https://blurrmc.com/api/v1/isuservalid/\(userId)") else { return }
-        var request = URLRequest(url:myUrl)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "content-type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        let task = URLSession.shared.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            if error != nil {
-                print("there is an error")
-                return
-            }
-            guard let data = data else { return }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? NSDictionary
-                if let parseJSON = json {
-                    let status: String? = parseJSON["status"] as? String
-                    switch status {
-                    case "User is valid! YAY :)":
-                        self.sendNotificationTokenToServer()
-                    case "User is not valid. Oh no!":
-                        try self.myValet.removeObject(forKey: "Id")
-                        try self.tokenValet.removeObject(forKey: "Token")
-                        try self.tokenValet.removeObject(forKey: "NotificationToken")
-                        try self.myValet.removeAllObjects()
-                        try self.tokenValet.removeAllObjects()
-                        DispatchQueue.main.async {
-                            let loginPage = self.storyboard?.instantiateViewController(identifier: "AuthenticateViewController") as! AuthenticateViewController
-                            self.present(loginPage, animated:false, completion:nil)
-                            self.window =  UIWindow(frame: UIScreen.main.bounds)
-                            self.window?.rootViewController = loginPage
-                            self.window?.makeKeyAndVisible()
-                        }
-                    case "Servers are currently offline, how unlucky":
-                        let storyboard = UIStoryboard(name: "AdditionalSettings", bundle: nil)
-                        let offlineController  = storyboard.instantiateViewController(identifier: "BlurrMCOfflineViewController")
-                        self.present(offlineController, animated: true, completion:nil)
-                        self.window =  UIWindow(frame: UIScreen.main.bounds)
-                        self.window?.makeKeyAndVisible()
-                    case .none:
-                        break
-                    case .some(_):
-                        if let httpResponse = response as? HTTPURLResponse {
-                            if httpResponse.statusCode == 404 {
-                                try self.myValet.removeObject(forKey: "Id")
-                                try self.tokenValet.removeObject(forKey: "Token")
-                                try self.myValet.removeAllObjects()
-                                try self.tokenValet.removeAllObjects()
-                                DispatchQueue.main.async {
-                                    let loginPage = self.storyboard?.instantiateViewController(identifier: "AuthenticateViewController") as! AuthenticateViewController
-                                    self.window =  UIWindow(frame: UIScreen.main.bounds)
-                                    self.present(loginPage, animated: true, completion: nil)
-                                    self.window?.rootViewController = loginPage
-                                }
-                            }
-                        } else {
-                            break
-                        }
-                    }
-                } else {
-                    return
-                }
-            } catch {
-                return
-            }
-        }
-        task.resume()
     }
     
     // MARK: Send the notification token to the server

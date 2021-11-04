@@ -10,8 +10,6 @@ import UIKit
 import CoreData
 import Valet
 import AVFoundation
-import Alamofire
-import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     let myValet = Valet.valet(with: Identifier(nonEmpty: "Id")!, accessibility: .whenUnlocked)
-    let tokenValet = Valet.valet(with: Identifier(nonEmpty: "Token")!, accessibility: .whenUnlocked)
     
     
     
@@ -81,18 +78,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        let accessToken: String? = try? tokenValet.string(forKey: "Token")
         let userId: String? = try? myValet.string(forKey: "Id")
-        requestNotificationAuthorization()
-        if accessToken != nil && userId != nil {
+        if userId != nil {
             let storyboard:UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
             self.window =  UIWindow(frame: UIScreen.main.bounds)
             let homePage = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
-            if(launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] != nil){
-                homePage.selectedIndex = 3
-            }
             self.window?.rootViewController = homePage
             return finishLoadingHomepage()
         }
@@ -108,61 +98,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    
-    // MARK: Register For Notifications
-    func requestNotificationAuthorization(){
-        UNUserNotificationCenter.current() .requestAuthorization( options: [.alert, .sound, .badge]) { [weak self] granted, error in
-            guard granted else { return }
-            self?.getNotificationSettings()
-        }
-    }
-    
-    // MARK: Received Notification
-    private func application(application: UIApplication,  didReceiveRemoteNotification userInfo: [NSObject : AnyObject],  fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        completionHandler(.newData)
-    }
-    
-    
-    // MARK: Get Notification Settings
-    func getNotificationSettings() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            guard settings.authorizationStatus == .authorized else { return }
-            DispatchQueue.main.async {
-                UIApplication.shared.registerForRemoteNotifications()
-            }
-        }
-    }
-    
-    
-    
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        try? self.tokenValet.setString(token, forKey: "NotificationToken")
-    }
-    
-    
-
-    // If the user does not allow push notifications, this method will be called
-    private func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        NSLog("Error code: a04ewma, Failed to get token. Error: %@", error)
-   }
-
-}
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.banner, .sound, .list])
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-          
-        NotificationCenter.default.post(name: .notificationtap, object: "notificationtap")
-        
-        completionHandler()
-    }
-
-}
-
-extension Notification.Name {
-    static let notificationtap = Notification.Name("tapfromnotification")
 }
