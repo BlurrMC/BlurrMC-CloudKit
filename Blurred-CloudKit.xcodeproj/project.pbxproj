@@ -17,6 +17,7 @@
 		E10D2C88266C8A4F001BD905 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10D2C87266C8A4F001BD905 /* ActivityIndicatorView.swift */; };
 		E110886B247031B500B9AA32 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E110886A247031B500B9AA32 /* AccountSettingsViewController.swift */; };
 		E1187D5A24ACB7DE00F7BFB6 /* SearchVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1187D5924ACB7DE00F7BFB6 /* SearchVideoCell.swift */; };
+		E118C83327337B0D004E4121 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E118C83227337B0D004E4121 /* README.md */; };
 		E125D30E2566E15D005E4E27 /* ImagePublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E125D30D2566E15D005E4E27 /* ImagePublisher.swift */; };
 		E12808CD245659D6001BF3F3 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12808CC245659D6001BF3F3 /* SignupViewController.swift */; };
 		E13515CC25492078000437CB /* CommentCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13515CB25492078000437CB /* CommentCellDelegate.swift */; };
@@ -113,6 +114,7 @@
 		E10D2C87266C8A4F001BD905 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		E110886A247031B500B9AA32 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
 		E1187D5924ACB7DE00F7BFB6 /* SearchVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVideoCell.swift; sourceTree = "<group>"; };
+		E118C83227337B0D004E4121 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "../BlurrMC-CloudKit/README.md"; sourceTree = "<group>"; };
 		E125D30D2566E15D005E4E27 /* ImagePublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePublisher.swift; sourceTree = "<group>"; };
 		E12808CC245659D6001BF3F3 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		E13515CB25492078000437CB /* CommentCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellDelegate.swift; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 		E1DF6F5D244F550300E11BF9 = {
 			isa = PBXGroup;
 			children = (
+				E118C83227337B0D004E4121 /* README.md */,
 				E1BA4934264F2A2500A518E5 /* CHANGELOG.md */,
 				E1DF6F68244F550300E11BF9 /* Blurred-ios */,
 				E1DF6F84244F550600E11BF9 /* Blurred-iosTests */,
@@ -669,6 +672,7 @@
 			files = (
 				E1D8C896246F119000F1EAD1 /* Settings.bundle in Resources */,
 				E15D6FC424BA5E3F00CC1E0E /* CommentBoard.storyboard in Resources */,
+				E118C83327337B0D004E4121 /* README.md in Resources */,
 				E1DF6FA5244F578700E11BF9 /* LaunchScreen.storyboard in Resources */,
 				5B2527AE2484388C0014F6CA /* Assets.xcassets in Resources */,
 				E1FE808126726D2F007036E7 /* VideoWatchingPreference.xib in Resources */,
@@ -1028,7 +1032,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Blurred-ios/Blurred.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 693PKCRWW3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1068,7 +1072,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Blurred-ios/Blurred.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 693PKCRWW3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

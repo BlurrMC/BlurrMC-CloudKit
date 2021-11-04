@@ -1,4 +1,14 @@
 # Changelog
+## 4.0 (Build 2)
+* Updated README
+### TODO:
+* Migrate channel
+* Migrate home
+* Migrate search
+* Migrate account settings
+* Migrate comments
+* Migrate follower + following
+* Migrate channel videos
 ## 4.0 (Build 1)
 * Removed OTP & EULA & notification settings & notifications view controllers
 * Removed token key
